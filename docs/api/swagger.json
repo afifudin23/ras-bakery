@@ -1,0 +1,1173 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Ras Bakery API Documentation",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:{port}/api/v1",
+      "description": "Local server",
+      "variables": {
+        "port": {
+          "default": "5000"
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Auth Login",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": { "type": "string" },
+                  "password": { "type": "string" }
+                }
+              },
+              "example": {
+                "email": "admin@gmail.com",
+                "password": "223344"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "string" },
+                        "name": { "type": "string" },
+                        "email": { "type": "string" },
+                        "role": { "type": "string", "enum": ["USER", "ADMIN"] },
+                        "default_shipping_address": { "type": "object" },
+                        "default_billing_address": { "type": "object" },
+                        "created_at": { "type": "string" },
+                        "updated_at": { "type": "string" }
+                      }
+                    },
+                    "token": { "type": "string" }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "id": 3,
+                    "name": "Admin",
+                    "email": "admin@gmail.com",
+                    "role": "ADMIN",
+                    "default_shipping_address": null,
+                    "default_billing_address": null,
+                    "created_at": "2025-11-04T05:25:32.091Z",
+                    "updated_at": "2025-11-04T05:25:32.091Z"
+                  },
+                  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzYyMjM3Nzg2fQ.3TMBCHF88m82fVUJsjBUWsDfXPb0_y5tgmeDb5253bU"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Auth Signup",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email", "password"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "email": { "type": "string" },
+                  "password": { "type": "string" }
+                }
+              },
+              "example": {
+                "name": "John Doe",
+                "email": "johndoe",
+                "password": "223344"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Signup successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string" },
+                    "name": { "type": "string" },
+                    "email": { "type": "string" },
+                    "role": { "type": "string", "enum": ["USER"] },
+                    "default_shipping_address": { "type": "object" },
+                    "default_billing_address": { "type": "object" },
+                    "created_at": { "type": "string" },
+                    "updated_at": { "type": "string" }
+                  }
+                },
+                "example": {
+                  "id": 3,
+                  "name": "John Doe",
+                  "email": "johndoe@gmail.com",
+                  "role": "USER",
+                  "default_shipping_address": null,
+                  "default_billing_address": null,
+                  "created_at": "2025-11-04T05:25:32.091Z",
+                  "updated_at": "2025-11-04T05:25:32.091Z"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "tags": ["Authentication"],
+        "security": [{ "AccessToken": [] }],
+        "summary": "Auth Signup",
+        "responses": {
+          "200": {
+            "description": "Signup successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string" },
+                    "name": { "type": "string" },
+                    "email": { "type": "string" },
+                    "role": { "type": "string" },
+                    "default_shipping_address": { "type": "object" },
+                    "default_billing_address": { "type": "object" },
+                    "created_at": { "type": "string" },
+                    "updated_at": { "type": "string" }
+                  }
+                },
+                "example": {
+                  "id": 3,
+                  "name": "Admin",
+                  "email": "admin@gmail.com",
+                  "role": "ADMIN",
+                  "default_shipping_address": null,
+                  "default_billing_address": null,
+                  "created_at": "2025-11-04T05:25:32.091Z",
+                  "updated_at": "2025-11-04T05:25:32.091Z"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/products": {
+      "post": {
+        "tags": ["Products"],
+        "security": [{ "AccessToken": [] }],
+        "summary": "Create New Product",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "description": { "type": "string" },
+                  "price": { "type": "number" },
+                  "tags": { "type": "array", "items": { "type": "string" } }
+                }
+              },
+              "example": {
+                "name": "Roti Sus",
+                "description": "Enak dan bergizi",
+                "price": 3000,
+                "tags": ["Mantap"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Create new product successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string" },
+                    "name": { "type": "string" },
+                    "description": { "type": "string" },
+                    "price": { "type": "number" },
+                    "tags": { "type": "array", "items": { "type": "string" } },
+                    "create_at": { "type": "string" },
+                    "update_at": { "type": "string" }
+                  }
+                },
+                "example": {
+                  "id": 2,
+                  "name": "Roti Sus",
+                  "description": "Enak dan bergizi",
+                  "price": "3000",
+                  "tags": "Mantap",
+                  "create_at": "2025-11-04T07:29:41.540Z",
+                  "update_at": "2025-11-04T07:29:41.540Z"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Products"],
+        "security": [{ "AccessToken": [] }],
+        "summary": "Get All Product",
+        "responses": {
+          "200": {
+            "description": "Get all product successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": { "type": "number" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "string" },
+                        "name": { "type": "string" },
+                        "description": { "type": "string" },
+                        "price": { "type": "number" },
+                        "tags": { "type": "array", "items": { "type": "string" } },
+                        "create_at": { "type": "string" },
+                        "update_at": { "type": "string" }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "count": 2,
+                  "data": [
+                    {
+                      "id": 1,
+                      "name": "Pukis alum",
+                      "description": "Enak, lezat dan bergizi",
+                      "price": "123000",
+                      "tags": "Mantap",
+                      "create_at": "2025-11-04T05:26:38.321Z",
+                      "update_at": "2025-11-04T05:27:06.974Z"
+                    },
+                    {
+                      "id": 2,
+                      "name": "Roti Sus",
+                      "description": "Enak dan bergizi",
+                      "price": "3000",
+                      "tags": "Mantap",
+                      "create_at": "2025-11-04T07:29:41.540Z",
+                      "update_at": "2025-11-04T07:29:41.540Z"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "tags": ["Products"],
+        "security": [{ "AccessToken": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/product-id" }],
+        "summary": "Get Product By Id",
+        "responses": {
+          "200": {
+            "description": "Get product by id successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string" },
+                    "name": { "type": "string" },
+                    "description": { "type": "string" },
+                    "price": { "type": "number" },
+                    "tags": { "type": "array", "items": { "type": "string" } },
+                    "create_at": { "type": "string" },
+                    "update_at": { "type": "string" }
+                  }
+                },
+                "example": {
+                  "id": 1,
+                  "name": "Pukis alum",
+                  "description": "Enak, lezat dan bergizi",
+                  "price": "123000",
+                  "tags": "Mantap",
+                  "create_at": "2025-11-04T05:26:38.321Z",
+                  "update_at": "2025-11-04T05:27:06.974Z"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Products"],
+        "security": [{ "AccessToken": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/product-id" }],
+        "summary": "Update Product",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "description": { "type": "string" },
+                  "price": { "type": "number" },
+                  "tags": { "type": "array", "items": { "type": "string" } }
+                }
+              },
+              "example": {
+                "name": "Pukis alum",
+                "description": "Enak, lezat dan bergizi",
+                "price": 123000,
+                "tags": ["Mantap", "Enak"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Create new product successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string" },
+                    "name": { "type": "string" },
+                    "description": { "type": "string" },
+                    "price": { "type": "number" },
+                    "tags": { "type": "array", "items": { "type": "string" } },
+                    "create_at": { "type": "string" },
+                    "update_at": { "type": "string" }
+                  }
+                },
+                "example": {
+                  "id": 2,
+                  "name": "Pukis alum",
+                  "description": "Enak, lezat dan bergizi",
+                  "price": 123000,
+                  "tags": "Mantap, Enak",
+                  "create_at": "2025-11-04T07:29:41.540Z",
+                  "update_at": "2025-11-04T07:29:41.540Z"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Products"],
+        "security": [{ "AccessToken": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/product-id" }],
+        "summary": "Delete Product By Id",
+        "responses": {
+          "200": {
+            "description": "Delete product by id successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string" },
+                    "name": { "type": "string" },
+                    "description": { "type": "string" },
+                    "price": { "type": "number" },
+                    "tags": { "type": "array", "items": { "type": "string" } },
+                    "create_at": { "type": "string" },
+                    "update_at": { "type": "string" }
+                  }
+                },
+                "example": {
+                  "id": 1,
+                  "name": "Pukis alum",
+                  "description": "Enak, lezat dan bergizi",
+                  "price": "123000",
+                  "tags": "Mantap",
+                  "create_at": "2025-11-04T05:26:38.321Z",
+                  "update_at": "2025-11-04T05:27:06.974Z"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/users/address": {
+      "post": {
+        "tags": ["Users Address"],
+        "security": [{ "AccessToken": [] }],
+        "summary": "Create New Address",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "lineOne": { "type": "string" },
+                  "city": { "type": "string" },
+                  "country": { "type": "string" },
+                  "pin_code": { "type": "string" }
+                }
+              },
+              "example": {
+                "lineOne": "Jl. Raya Nusantara",
+                "city": "Nusantara",
+                "country": "Indonesian",
+                "pin_code": "523410"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Create new address successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string" },
+                    "lineOne": { "type": "string" },
+                    "lineTwo": { "type": "string" },
+                    "city": { "type": "string" },
+                    "country": { "type": "string" },
+                    "pin_code": { "type": "string" },
+                    "user_id": { "type": "string" },
+                    "created_at": { "type": "string" },
+                    "updated_at": { "type": "string" },
+                    "fromatted_address": { "type": "string" }
+                  }
+                },
+                "example": {
+                  "id": 1,
+                  "lineOne": "Pasar Suradadi",
+                  "lineTwo": null,
+                  "city": "Tegal",
+                  "country": "Indonesian",
+                  "pin_code": "523410",
+                  "user_id": 3,
+                  "created_at": "2025-11-04T08:00:53.538Z",
+                  "updated_at": "2025-11-04T08:00:53.538Z",
+                  "fromatted_address": "Pasar Suradadi, Tegal, Indonesian, 523410"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Users Address"],
+        "security": [{ "AccessToken": [] }],
+        "summary": "Get All User Addresses",
+        "responses": {
+          "200": {
+            "description": "Get all user address successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "integer" },
+                      "lineOne": { "type": "string" },
+                      "lineTwo": { "type": "string", "nullable": true },
+                      "city": { "type": "string" },
+                      "country": { "type": "string" },
+                      "pin_code": { "type": "string" },
+                      "user_id": { "type": "integer" },
+                      "created_at": { "type": "string", "format": "date-time" },
+                      "updated_at": { "type": "string", "format": "date-time" },
+                      "formatted_address": { "type": "string" }
+                    },
+                    "required": [
+                      "id",
+                      "lineOne",
+                      "city",
+                      "country",
+                      "pin_code",
+                      "user_id",
+                      "created_at",
+                      "updated_at",
+                      "formatted_address"
+                    ]
+                  }
+                },
+                "example": [
+                  {
+                    "id": 1,
+                    "lineOne": "Pasar Suradadi",
+                    "lineTwo": null,
+                    "city": "Tegal",
+                    "country": "Indonesia",
+                    "pin_code": "523410",
+                    "user_id": 3,
+                    "created_at": "2025-11-04T08:00:53.538Z",
+                    "updated_at": "2025-11-04T08:00:53.538Z",
+                    "formatted_address": "Pasar Suradadi, Tegal, Indonesia, 523410"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/address/{id}": {
+      "get": {
+        "tags": ["Users Address"],
+        "security": [{ "AccessToken": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/address-id" }],
+        "summary": "Get User Address By Id",
+        "responses": {
+          "200": {
+            "description": "Get user address by id successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "integer" },
+                    "lineOne": { "type": "string" },
+                    "lineTwo": { "type": "string", "nullable": true },
+                    "city": { "type": "string" },
+                    "country": { "type": "string" },
+                    "pin_code": { "type": "string" },
+                    "user_id": { "type": "integer" },
+                    "created_at": { "type": "string", "format": "date-time" },
+                    "updated_at": { "type": "string", "format": "date-time" },
+                    "formatted_address": { "type": "string" }
+                  },
+                  "required": [
+                    "id",
+                    "lineOne",
+                    "city",
+                    "country",
+                    "pin_code",
+                    "user_id",
+                    "created_at",
+                    "updated_at",
+                    "formatted_address"
+                  ]
+                },
+                "example": {
+                  "id": 1,
+                  "lineOne": "Pasar Suradadi",
+                  "lineTwo": null,
+                  "city": "Tegal",
+                  "country": "Indonesia",
+                  "pin_code": "523410",
+                  "user_id": 3,
+                  "created_at": "2025-11-04T08:00:53.538Z",
+                  "updated_at": "2025-11-04T08:00:53.538Z",
+                  "formatted_address": "Pasar Suradadi, Tegal, Indonesia, 523410"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Users Address"],
+        "security": [{ "AccessToken": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/address-id" }],
+        "summary": "Update User Address",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "lineOne": { "type": "string" },
+                  "lineTwo": { "type": "string", "nullable": true },
+                  "city": { "type": "string" },
+                  "country": { "type": "string" },
+                  "pin_code": { "type": "string" }
+                }
+              },
+              "example": {
+                "lineOne": "Jl. Raya Merdeka",
+                "lineTwo": "Blok A No. 3",
+                "city": "Jakarta",
+                "country": "Indonesia",
+                "pin_code": "123456"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Update user address successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "integer" },
+                    "lineOne": { "type": "string" },
+                    "lineTwo": { "type": "string", "nullable": true },
+                    "city": { "type": "string" },
+                    "country": { "type": "string" },
+                    "pin_code": { "type": "string" },
+                    "user_id": { "type": "integer" },
+                    "created_at": { "type": "string", "format": "date-time" },
+                    "updated_at": { "type": "string", "format": "date-time" },
+                    "formatted_address": { "type": "string" }
+                  },
+                  "required": [
+                    "id",
+                    "lineOne",
+                    "city",
+                    "country",
+                    "pin_code",
+                    "user_id",
+                    "created_at",
+                    "updated_at",
+                    "formatted_address"
+                  ]
+                },
+                "example": {
+                  "id": 1,
+                  "lineOne": "Jl. Raya Merdeka",
+                  "lineTwo": "Blok A No. 3",
+                  "city": "Jakarta",
+                  "country": "Indonesia",
+                  "pin_code": "123456",
+                  "user_id": 3,
+                  "created_at": "2025-11-04T08:00:53.538Z",
+                  "updated_at": "2025-11-04T09:10:20.112Z",
+                  "formatted_address": "Jl. Raya Merdeka Blok A No. 3, Jakarta, Indonesia, 123456"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Users Address"],
+        "security": [{ "AccessToken": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/address-id" }],
+        "summary": "Delete User Address By Id",
+        "responses": {
+          "200": {
+            "description": "Delete user address by id successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" }
+                  }
+                },
+                "example": {
+                  "message": "Address deleted successfully"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/users/cart": {
+      "get": {
+        "tags": ["User Carts"],
+        "security": [{ "AccessToken": [] }],
+        "summary": "Get All User Carts",
+        "responses": {
+          "200": {
+            "description": "Get all user cart successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "integer" },
+                      "user_id": { "type": "integer" },
+                      "product_id": { "type": "integer" },
+                      "quantity": { "type": "integer" },
+                      "created_at": { "type": "string", "format": "date-time" },
+                      "updated_at": { "type": "string", "format": "date-time" },
+                      "product": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "number" },
+                          "name": { "type": "string" },
+                          "description": { "type": "string" },
+                          "price": { "type": "string" },
+                          "tags": { "type": "string" },
+                          "create_at": { "type": "string" },
+                          "update_at": { "type": "string" }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "id": 1,
+                    "user_id": 3,
+                    "product_id": 1,
+                    "quantity": 1,
+                    "created_at": "2025-11-04T08:19:47.054Z",
+                    "updated_at": "2025-11-04T08:19:47.054Z",
+                    "product": {
+                      "id": 1,
+                      "name": "Pukis alum",
+                      "description": "Enak, lezat dan bergizi",
+                      "price": "123000",
+                      "tags": "Enak, Mantap",
+                      "create_at": "2025-11-04T05:26:38.321Z",
+                      "update_at": "2025-11-04T07:51:27.099Z"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/cart/{id}": {
+      "post": {
+        "tags": ["User Carts"],
+        "parameters": [{ "$ref": "#/components/parameters/product-id" }],
+        "security": [{ "AccessToken": [] }],
+        "summary": "Add To Cart",
+        "responses": {
+          "200": {
+            "description": "Add to cart successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "integer" },
+                    "user_id": { "type": "integer" },
+                    "product_id": { "type": "integer" },
+                    "quantity": { "type": "integer" },
+                    "created_at": { "type": "string", "format": "date-time" },
+                    "updated_at": { "type": "string", "format": "date-time" }
+                  }
+                },
+                "example": {
+                  "id": 2,
+                  "user_id": 3,
+                  "product_id": 1,
+                  "quantity": 1,
+                  "created_at": "2025-11-04T08:28:39.820Z",
+                  "updated_at": "2025-11-04T08:28:39.820Z"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["User Carts"],
+        "security": [{ "AccessToken": [] }],
+        "summary": "Edit Cart",
+        "parameters": [{ "$ref": "#/components/parameters/cart-id" }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "quantity": { "type": "integer" }
+                }
+              },
+              "example": {
+                "quantity": 1
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Edit cart successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "integer" },
+                    "user_id": { "type": "integer" },
+                    "product_id": { "type": "integer" },
+                    "quantity": { "type": "integer" },
+                    "created_at": { "type": "string", "format": "date-time" },
+                    "updated_at": { "type": "string", "format": "date-time" }
+                  }
+                },
+                "example": {
+                  "id": 2,
+                  "user_id": 3,
+                  "product_id": 1,
+                  "quantity": 1,
+                  "created_at": "2025-11-04T08:28:39.820Z",
+                  "updated_at": "2025-11-04T08:28:39.820Z"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["User Carts"],
+        "security": [{ "AccessToken": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/cart-id" }],
+        "summary": "Add To Cart",
+        "responses": {
+          "200": {
+            "description": "Delete cart successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "integer" },
+                    "user_id": { "type": "integer" },
+                    "product_id": { "type": "integer" },
+                    "quantity": { "type": "integer" },
+                    "created_at": { "type": "string", "format": "date-time" },
+                    "updated_at": { "type": "string", "format": "date-time" }
+                  }
+                },
+                "example": {
+                  "id": 2,
+                  "user_id": 3,
+                  "product_id": 1,
+                  "quantity": 1,
+                  "created_at": "2025-11-04T08:28:39.820Z",
+                  "updated_at": "2025-11-04T08:28:39.820Z"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/orders": {
+      "post": {
+        "tags": ["Orders"],
+        "security": [{ "AccessToken": [] }],
+        "summary": "Create New Order",
+        "responses": {
+          "200": {
+            "description": "Create new order successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "integer" },
+                    "user_id": { "type": "integer" },
+                    "net_amount": { "type": "string" },
+                    "address": { "type": "string" },
+                    "status": { "type": "string" },
+                    "created_at": { "type": "string", "format": "date-time" },
+                    "updated_at": { "type": "string", "format": "date-time" }
+                  }
+                },
+                "example": {
+                  "id": 1,
+                  "user_id": 3,
+                  "net_amount": "123000",
+                  "address": "Pasar Suradadi, Tegal, Indonesian, 523410",
+                  "status": "PENDING",
+                  "created_at": "2025-11-04T10:49:44.611Z",
+                  "updated_at": "2025-11-04T10:49:44.611Z"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Orders"],
+        "security": [{ "AccessToken": [] }],
+        "summary": "Get All Orders",
+        "responses": {
+          "200": {
+            "description": "Get all orders successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "integer" },
+                    "user_id": { "type": "integer" },
+                    "net_amount": { "type": "string" },
+                    "address": { "type": "string" },
+                    "status": { "type": "string" },
+                    "created_at": { "type": "string", "format": "date-time" },
+                    "updated_at": { "type": "string", "format": "date-time" },
+                    "products": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "integer" },
+                          "order_id": { "type": "integer" },
+                          "product_id": { "type": "integer" },
+                          "quantity": { "type": "integer" },
+                          "created_at": { "type": "string", "format": "date-time" },
+                          "update_at": { "type": "string", "format": "date-time" }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "id": 1,
+                    "user_id": 3,
+                    "net_amount": "123000",
+                    "address": "Pasar Suradadi, Tegal, Indonesian, 523410",
+                    "status": "PENDING",
+                    "created_at": "2025-11-04T10:49:44.611Z",
+                    "updated_at": "2025-11-04T10:49:44.611Z",
+                    "products": [
+                      {
+                        "id": 1,
+                        "order_id": 1,
+                        "product_id": 1,
+                        "quantity": 1,
+                        "created_at": "2025-11-04T10:49:44.611Z",
+                        "update_at": "2025-11-04T10:49:44.611Z"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{id}": {
+      "get": {
+        "tags": ["Orders"],
+        "security": [{ "AccessToken": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/order-id" }],
+        "summary": "Get Order By Id",
+        "responses": {
+          "200": {
+            "description": "Get order by id successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "integer" },
+                    "user_id": { "type": "integer" },
+                    "net_amount": { "type": "string" },
+                    "address": { "type": "string" },
+                    "status": { "type": "string" },
+                    "created_at": { "type": "string", "format": "date-time" },
+                    "updated_at": { "type": "string", "format": "date-time" },
+                    "products": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "integer" },
+                          "order_id": { "type": "integer" },
+                          "product_id": { "type": "integer" },
+                          "quantity": { "type": "integer" },
+                          "created_at": { "type": "string", "format": "date-time" },
+                          "update_at": { "type": "string", "format": "date-time" }
+                        }
+                      }
+                    },
+                    "events": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "integer" },
+                          "order_id": { "type": "integer" },
+                          "status": { "type": "string" },
+                          "created_at": { "type": "string", "format": "date-time" },
+                          "updated_at": { "type": "string", "format": "date-time" }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "id": 1,
+                    "user_id": 3,
+                    "net_amount": "123000",
+                    "address": "Pasar Suradadi, Tegal, Indonesian, 523410",
+                    "status": "PENDING",
+                    "created_at": "2025-11-04T10:49:44.611Z",
+                    "updated_at": "2025-11-04T10:49:44.611Z",
+                    "products": [
+                      {
+                        "id": 1,
+                        "order_id": 1,
+                        "product_id": 1,
+                        "quantity": 1,
+                        "created_at": "2025-11-04T10:49:44.611Z",
+                        "update_at": "2025-11-04T10:49:44.611Z"
+                      }
+                    ],
+                    "events": [
+                      {
+                        "id": 1,
+                        "order_id": 1,
+                        "status": "PENDING",
+                        "created_at": "2025-11-04T10:49:44.611Z",
+                        "updated_at": "2025-11-04T10:49:44.611Z"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{id}/status": {
+      "put": {
+        "tags": ["Orders"],
+        "security": [{ "AccessToken": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/order-id" }],
+        "summary": "Update Status Order",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": ["PENDING", "ACCEPTED", "OUT_FOR_DELIVERY", "DELIVERED", "CANCELLED"]
+                  }
+                }
+              },
+              "example": {
+                "status": "CANCELLED"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Update status order successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "integer" },
+                    "user_id": { "type": "integer" },
+                    "net_amount": { "type": "string" },
+                    "address": { "type": "string" },
+                    "status": { "type": "string" },
+                    "created_at": { "type": "string", "format": "date-time" },
+                    "updated_at": { "type": "string", "format": "date-time" }
+                  }
+                },
+                "example": {
+                  "id": 1,
+                  "user_id": 3,
+                  "net_amount": "123000",
+                  "address": "Pasar Suradadi, Tegal, Indonesian, 523410",
+                  "status": "CANCELLED",
+                  "created_at": "2025-11-04T10:49:44.611Z",
+                  "updated_at": "2025-11-04T10:49:44.611Z"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "components": {
+    "parameters": {
+      "product-id": {
+        "name": "id",
+        "description": "product id",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      },
+      "address-id": {
+        "name": "id",
+        "in": "path",
+        "description": "address id",
+        "required": true,
+        "schema": { "type": "string" }
+      },
+      "cart-id": {
+        "name": "id",
+        "description": "cart id",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      },
+      "order-id": {
+        "name": "id",
+        "description": "order id",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      }
+    },
+    "securitySchemes": {
+      "AccessToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

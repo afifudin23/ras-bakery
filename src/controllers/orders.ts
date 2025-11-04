@@ -9,7 +9,7 @@ export const createOrder = async (req: AuthReq, res: Response, next: NextFunctio
     await prisma.$transaction(async (tx) => {
         const cartItems = await tx.cartItem.findMany({
             where: {
-                user_id: req.user.id,
+                user_id: +req.user.id,
             },
             include: {
                 product: true,
@@ -21,11 +21,12 @@ export const createOrder = async (req: AuthReq, res: Response, next: NextFunctio
         const price = cartItems.reduce((prev, current) => {
             return prev + current.quantity * +current.product.price;
         }, 0);
-
+        
         // check default address
+        if (!req.user.default_shipping_address) throw new NotFoundException("Default address user not found", ErrorCode.ADDRESS_NOT_FOUND);
         const address = await tx.address.findFirst({
             where: {
-                id: req.user.default_shipping_address!,
+                id: req.user.default_shipping_address,
             },
         });
         const order = await tx.order.create({
@@ -67,30 +68,9 @@ export const getOrders = async (req: AuthReq, res: Response, next: NextFunction)
         },
     });
     if (orders.length === 0) {
-        return res.json({ message: "Cart item is empty" });
+        return res.json({ message: "Orders is empty" });
     }
     res.json(orders);
-};
-export const cancelOrder = async (req: AuthReq, res: Response, next: NextFunction) => {
-    try {
-        const order = await prisma.order.update({
-            where: {
-                id: +req.params.id,
-            },
-            data: {
-                status: "CANCELLED",
-            },
-        });
-        await prisma.orderEvent.create({
-            data: {
-                order_id: +req.params.id,
-                status: "CANCELLED",
-            },
-        });
-        res.json(order);
-    } catch (error) {
-        return next(new NotFoundException("Order not found", ErrorCode.ORDER_NOT_FOUND));
-    }
 };
 
 export const getOrderById = async (req: AuthReq, res: Response, next: NextFunction) => {

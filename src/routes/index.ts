@@ -8,8 +8,8 @@ import ordersRoutes from "./orders";
 const rootRouter: Router = Router();
 rootRouter.use("/auth", authRouter);
 rootRouter.use("/products", productsRouter);
-rootRouter.use("/users", usersRouter);
 rootRouter.use("/users", cartItemRoutes);
+rootRouter.use("/users", usersRouter);
 rootRouter.use("/orders", ordersRoutes);
 
 export default rootRouter;

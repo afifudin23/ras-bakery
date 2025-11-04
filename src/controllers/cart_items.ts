@@ -58,7 +58,7 @@ export const deleteItemFromCart = async (req: AuthReq, res: Response, next: Next
                 id: +req.params.cart_id,
             },
         });
-        res.json({ status: "deleted success", cartItem });
+        res.json(cartItem);
     } catch (error) {
         return next(new NotFoundException("Cart not found", ErrorCode.CART_NOT_FOUND));
     }

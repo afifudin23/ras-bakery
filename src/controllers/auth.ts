@@ -4,7 +4,7 @@ import { prisma } from "..";
 import { compare, hash } from "bcryptjs";
 import BadRequestException from "../exceptions/bad_request";
 import { ErrorCode } from "../exceptions";
-import { JWT_TOKEN } from "../keys";
+import { JWT_SECRET } from "../keys";
 import { LoginSchema, SignUpSchema } from "../schemas/auth";
 import NotFoundException from "../exceptions/not_found";
 import { AuthReq } from "../middlewares/auth";
@@ -46,7 +46,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         return next(new BadRequestException("Incorrect password", ErrorCode.INCORRECT_PASSWORD));
     }
     const { password: pass, ...data } = user!;
-    const token = jwt.sign({ id: user!.id }, JWT_TOKEN!);
+    const token = jwt.sign({ id: user!.id }, JWT_SECRET!);
     res.json({ data, token });
 };
 
