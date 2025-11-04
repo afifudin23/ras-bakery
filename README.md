@@ -51,18 +51,26 @@ Then the server will be running at http://localhost:5000 🚀
 
 Swagger documentation is available at: [Swagger UI](https://afifudin23.github.io/ras-bakery-api/docs)
 
-## 🧑‍💻 Author
-Ras Bakery Team
-Developed by Andev <span class="heart">💖</span>
+#
 
-<style>
-.heart {
-  display: inline-block;
-  animation: beat 1s infinite;
-  padding-left: 5px
-}
-@keyframes beat {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.5); }
-}
-</style>
+<p align="center">
+  Ras Bakery Team Developed by Andev
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="20" fill="red">
+        <path
+          d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 
+                2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 
+                14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 
+                3.78-3.4 6.86-8.55 11.54L12 21.35z"
+        >
+          <animateTransform
+            attributeName="transform"
+            attributeType="XML"
+            type="scale"
+            values="1;1.3;1"
+            dur="0.8s"
+            repeatCount="indefinite"
+          />
+        </path>
+  </svg>
+  
+</p>
